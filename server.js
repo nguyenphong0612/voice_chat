@@ -25,6 +25,7 @@ app.get('/script.js', (req, res) => {
 });
 
 // API Routes
+app.use('/api/ping', require('./api/ping'));
 app.use('/api/chat', require('./api/chat'));
 app.use('/api/history', require('./api/history'));
 
