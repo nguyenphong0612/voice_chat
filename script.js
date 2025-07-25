@@ -379,11 +379,17 @@ async function sendMessage(message) {
 
   try {
     // Use main chat API with OpenAI
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+    
     const res = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message, sessionId })
+      body: JSON.stringify({ message, sessionId }),
+      signal: controller.signal
     });
+    
+    clearTimeout(timeoutId);
     
     console.log('Response status:', res.status);
     
@@ -425,7 +431,16 @@ async function sendMessage(message) {
   } catch (err) {
     hideLoading();
     console.error('Network error:', err);
-    appendMessage('assistant', 'Lỗi kết nối mạng. Vui lòng thử lại.');
+    
+    let errorMessage = 'Lỗi kết nối mạng. Vui lòng thử lại.';
+    
+    if (err.message.includes('Failed to fetch')) {
+      errorMessage = 'Không thể kết nối đến server. Vui lòng kiểm tra internet.';
+    } else if (err.message.includes('timeout')) {
+      errorMessage = 'Server đang bận. Vui lòng thử lại sau.';
+    }
+    
+    appendMessage('assistant', errorMessage);
     
     // Reset status
     voiceStatus.textContent = 'Nhấn microphone để bắt đầu';

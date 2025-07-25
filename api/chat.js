@@ -166,6 +166,21 @@ module.exports = async (req, res) => {
     
   } catch (error) {
     console.error('Error:', error);
-    res.status(500).json({ error: error.message });
+    
+    // Provide user-friendly error messages
+    let errorMessage = 'Có lỗi xảy ra. Vui lòng thử lại.';
+    
+    if (error.message.includes('API key')) {
+      errorMessage = 'Lỗi cấu hình API. Vui lòng kiểm tra lại.';
+    } else if (error.message.includes('network')) {
+      errorMessage = 'Lỗi kết nối mạng. Vui lòng kiểm tra internet.';
+    } else if (error.message.includes('timeout')) {
+      errorMessage = 'Hệ thống đang bận. Vui lòng thử lại sau.';
+    }
+    
+    res.status(500).json({ 
+      error: errorMessage,
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 }; 
