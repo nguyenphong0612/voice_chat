@@ -378,8 +378,8 @@ async function sendMessage(message) {
   voiceStatus.className = 'voice-status processing';
 
   try {
-    // Test with simple API first
-    const res = await fetch('/api/chat-simple', {
+    // Use main chat API with OpenAI
+    const res = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ message, sessionId })
