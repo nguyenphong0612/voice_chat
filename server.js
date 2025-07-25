@@ -14,6 +14,8 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname)));
 
 // API Routes
+app.use('/api/test', require('./api/test'));
+app.use('/api/chat-simple', require('./api/chat-simple'));
 app.use('/api/chat', require('./api/chat'));
 app.use('/api/history', require('./api/history'));
 app.use('/api/check-env', require('./api/check-env'));
@@ -22,6 +24,8 @@ app.use('/api/check-env', require('./api/check-env'));
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
+
+
 
 // Error handling middleware
 app.use((err, req, res, next) => {

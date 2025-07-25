@@ -367,6 +367,8 @@ window.addEventListener('click', (event) => {
 async function sendMessage(message) {
   if (!message.trim()) return;
   
+  console.log('Sending message:', message);
+  
   appendMessage('user', message);
   userInput.value = '';
   showLoading();
@@ -376,17 +378,21 @@ async function sendMessage(message) {
   voiceStatus.className = 'voice-status processing';
 
   try {
-    const res = await fetch('/api/chat', {
+    // Test with simple API first
+    const res = await fetch('/api/chat-simple', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ message, sessionId })
     });
+    
+    console.log('Response status:', res.status);
     
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
     
     const data = await res.json();
+    console.log('Response data:', data);
     hideLoading();
     
     if (data.response) {

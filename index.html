@@ -10,6 +10,7 @@
   <div class="chat-container">
     <div class="chat-header">
       <h2>Chatbot Giọng Nói</h2>
+      <button id="history-btn" class="history-btn">📋 Lịch sử</button>
       <div class="voice-status" id="voice-status">Nhấn microphone để bắt đầu</div>
     </div>
     
@@ -29,6 +30,20 @@
       </div>
     </div>
   </div>
+
+  <!-- History Modal -->
+  <div id="history-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Lịch sử hội thoại</h3>
+        <span class="close">&times;</span>
+      </div>
+      <div id="history-list" class="history-list">
+        <!-- History items will be loaded here -->
+      </div>
+    </div>
+  </div>
+
   <script src="script.js"></script>
 </body>
 </html> 
