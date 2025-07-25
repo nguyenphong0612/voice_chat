@@ -3,6 +3,23 @@ const { createClient } = require('@supabase/supabase-js');
 const dotenv = require('dotenv');
 dotenv.config();
 
+// Validate environment variables
+if (!process.env.OPENAI_API_KEY) {
+  console.error('❌ OPENAI_API_KEY is not set');
+}
+
+if (!process.env.OPENAI_ASSISTANT_ID) {
+  console.error('❌ OPENAI_ASSISTANT_ID is not set');
+}
+
+if (!process.env.SUPABASE_URL) {
+  console.error('❌ SUPABASE_URL is not set');
+}
+
+if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+  console.error('❌ SUPABASE_SERVICE_ROLE_KEY is not set');
+}
+
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
@@ -58,12 +75,17 @@ module.exports = async (req, res) => {
   conversations[sessionId].push({ role: 'user', content: message });
 
   try {
+    // Check if OpenAI API key is available
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error('OpenAI API key is not configured');
+    }
+
     // Use OpenAI Realtime API (Assistant API)
     console.log('Creating thread...');
     const thread = await openai.beta.threads.create();
     
     if (!thread || !thread.id) {
-      throw new Error('Failed to create thread');
+      throw new Error('Failed to create thread - thread.id is undefined');
     }
     
     console.log('Thread created:', thread.id);
@@ -75,15 +97,20 @@ module.exports = async (req, res) => {
       content: message
     });
 
+    // Check if assistant ID is available
+    if (!process.env.OPENAI_ASSISTANT_ID) {
+      throw new Error('OpenAI Assistant ID is not configured');
+    }
+
     // Run assistant
-    console.log('Creating run...');
+    console.log('Creating run with assistant ID:', process.env.OPENAI_ASSISTANT_ID);
     const run = await openai.beta.threads.runs.create(thread.id, {
-      assistant_id: process.env.OPENAI_ASSISTANT_ID || 'asst_default',
+      assistant_id: process.env.OPENAI_ASSISTANT_ID,
       instructions: 'You are a helpful AI assistant. Respond in the same language the user speaks.'
     });
 
     if (!run || !run.id) {
-      throw new Error('Failed to create run');
+      throw new Error('Failed to create run - run.id is undefined');
     }
     
     console.log('Run created:', run.id);

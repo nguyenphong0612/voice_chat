@@ -16,6 +16,7 @@ app.use(express.static(path.join(__dirname)));
 // API Routes
 app.use('/api/chat', require('./api/chat'));
 app.use('/api/history', require('./api/history'));
+app.use('/api/check-env', require('./api/check-env'));
 
 // Serve the main HTML file
 app.get('/', (req, res) => {
