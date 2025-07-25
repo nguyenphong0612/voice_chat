@@ -13,6 +13,17 @@ const PORT = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname)));
 
+// Serve static files explicitly
+app.get('/style.css', (req, res) => {
+  res.setHeader('Content-Type', 'text/css');
+  res.sendFile(path.join(__dirname, 'style.css'));
+});
+
+app.get('/script.js', (req, res) => {
+  res.setHeader('Content-Type', 'application/javascript');
+  res.sendFile(path.join(__dirname, 'script.js'));
+});
+
 // API Routes
 app.use('/api/test', require('./api/test'));
 app.use('/api/chat-simple', require('./api/chat-simple'));
